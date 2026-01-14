@@ -1,0 +1,50 @@
+;
+;	File '9JGM-D.top' was generated
+;	By user: tfernand (28029)
+;	On host: login02.leonardo.local
+;	At date: Mon Sep  1 15:00:20 2025
+;
+;	This is a standalone topology file
+;
+;	Created by:
+;	              :-) GROMACS - gmx pdb2gmx, 2022.3-plumed_2.8.1 (-:
+;	
+;	Executable:   /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/gromacs-2022.3-owzxiwojzrytaodpf2r7dvd63jflbvex/bin/gmx_mpi
+;	Data prefix:  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/gromacs-2022.3-owzxiwojzrytaodpf2r7dvd63jflbvex
+;	Working dir:  /leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Deprot/chain-D/01_box-min
+;	Command line:
+;	  gmx_mpi pdb2gmx -f 9JGM.pdb -o 9JGM-D.gro -p 9JGM-D.top -water select -ignh
+;	Force field was read from current directory or a relative path - path added.
+;
+
+; Include forcefield parameters
+#include "./XOL3pH.ff/forcefield.itp"
+
+; Include chain topologies
+#include "9JGM-D_RNA_chain_D.itp"
+#include "9JGM-D_Ion_chain_A.itp"
+
+; Include water topology
+#include "./XOL3pH.ff/opc.itp"
+
+#ifdef POSRES_WATER
+; Position restraint for each water oxygen
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+#endif
+
+; Include topology for ions
+#include "./XOL3pH.ff/ions.itp"
+
+[ system ]
+; Name
+Protein in water
+
+[ molecules ]
+; Compound        #mols
+RNA_chain_D         1
+Ion_chain_A         1
+SOL         38799
+K                128
+CL               30

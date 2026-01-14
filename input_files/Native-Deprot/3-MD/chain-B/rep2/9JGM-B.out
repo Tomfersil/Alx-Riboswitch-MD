@@ -1,0 +1,41 @@
+Setting the LD random seed to 800930935
+
+Generated 4220 of the 4278 non-bonded parameter combinations
+
+Generated 4278 of the 4278 1-4 parameter combinations
+
+Excluding 3 bonded neighbours molecule type 'RNA_chain_B'
+
+turning H bonds into constraints...
+
+Excluding 3 bonded neighbours molecule type 'Ion_chain_A'
+
+turning H bonds into constraints...
+
+Excluding 2 bonded neighbours molecule type 'SOL'
+
+turning H bonds into constraints...
+
+Excluding 1 bonded neighbours molecule type 'K'
+
+turning H bonds into constraints...
+
+Excluding 3 bonded neighbours molecule type 'Cl'
+
+turning H bonds into constraints...
+
+Cleaning up constraints and constant bonded interactions with virtual sites
+
+The largest distance between excluded atoms is 0.411 nm
+
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 310 K
+
+Calculated rlist for 1x1 atom pair-list as 1.117 nm, buffer size 0.117 nm
+
+Set rlist, assuming 4x4 atom pair-list, to 1.050 nm, buffer size 0.050 nm
+
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 100x100x100, spacing 0.119 0.119 0.119
+
+Estimate for the relative computational load of the PME mesh part: 0.25

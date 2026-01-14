@@ -1,0 +1,210 @@
+########################################
+#
+###  Start of Slurm parameters       ###
+#
+########################################
+GPU=1                       # Tag for GPU use (1) or not (0) 
+nCPU=2                     # Number of CPUs to be used in parallel
+Partition=boost_usr_prod   # MD32f/MD32c: 32 cores/threads for 8/16 cores submissions
+#
+########################################
+#
+###  Start of CpHMD settings (pHmdp) ###
+#
+########################################
+export SysName="9JGM-A-P"    # Name of our protein or system
+export Segments=20          # Number of MD/CpHMD Segments
+export Seg_size=10           # Size of each Segment in nanoseconds
+export ffID=XOL3pH_mMG         # Force fields: G54a7pH or CHARMM36pH or Amber14SBpH
+export water=opc            # Water model used
+export pH=7.00              # Solution pH
+export sites="276"            # list of residues to titrate or "all" to titrate every residue
+export temp=310.0           # Temperature (Kelvin)
+export ionicstr=0.1         # Ionic Strength (moles/litre)
+export RelaxSteps=100       # Solvent relaxation time in steps 
+export EffectiveSteps=10000 # Effective time in steps (real simulation time)
+#
+export memb=0               # Flag needed when on membrane systems 
+export include_itp=1        # Correctly treats systems with multiple solute systems as include itp instead of FF added molecules.
+export multiple_solutes=1 # Force fixbox to correct PBC in multiple solutes.
+
+##################
+# PB/MC settings #
+##################
+export epsin=2.0            # Dielectric constant of molecular interior
+export epssol=80.0          # Dielectric constant of the solvent 
+export PBdim=0              # dimensions in the PB PBC settings (0 for protein; 2 for membrane)
+export cutoff=-1            # Cutoff (in nm) for background and pairwise interactions (-1 will not cutoff)
+export GridSize=81          # PB grid size (multiply by ~1 Angstr) (was 81)
+export scaleP=1.0           # scale large box (1.0 -> 1 Angstrm)
+export scaleM=4.0           # scale focusing box (4.0 -> 1/4 Angstrm)
+export bndcon=4             # Potential at Boundary of large box (4 -> Coul)
+export maxc=0.01            # The convergence threshold values
+export pot=0.0              # Electrostatic potential (mV).
+export offset=2000          # Integer higher than residue number .gro 
+export seed=1234567         # Monte Carlo seed used in program petit.
+
+##############################
+# Reduced titration settings #
+##############################
+export ReduceTitration=0
+export RTThreshold=0.001
+export RTInterval=5
+## RT debug ##
+export write_states="y"
+
+################################
+# Plumed integration variables #
+################################
+export plumed=1        # turn plumed on or off (1/0)
+export plumedtype=generic #static/grid/hill/generic
+export colvar_name="colvar"
+export colvar_stride=1000        #Should be equal to the nstxtcout-compressed number of timesteps (ex.: 10000 * 0.002 = 20 ps)
+export grid_name="GRIDS"
+export hills="HILLS"
+#export rAB=value_rAB # Replaced in the submission script
+
+##########################################
+#
+# -- Input File Location (full PATHs) -- #
+#
+##########################################
+export TOPin="/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Prot/chain-A/01_box-min/9JGM-A-P_cph.top"    # The topology of your system
+export GROin="/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Prot/chain-A/06_eRMSD/rep1/run_steered_ermsd.gro"    # The initial (gro) file
+export NDXin="/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Prot/chain-A/01_box-min/index_cph.ndx"    # Index must contain "System/Protein/Solute/SOL" and "Onetail/Monotail/Bitail" when PBdim=2
+export PosRe=""             # File to use position restraints in production
+export LigItp=""            # File for itp ligands that are not in FF 
+
+####################################
+#
+# -- Input Directories Location -- #
+#
+####################################
+export CpHDIR="/leonardo/home/userexternal/tfernand/Constant_pH/CpHMD_v3.4.2"          # CpHMD distribution
+export GroDIR="/leonardo/pub/userexternal/olanguin/install/gromacs-2023.5-plumed-2.10b/bin/gmx_mpi"  
+export DelphiDir="/leonardo/home/userexternal/tfernand/Constant_pH/DelphiTools_v3.4" # DELPHI Programs and scripts
+export StDIR="/leonardo/home/userexternal/tfernand/Constant_pH/St-XOL3_DelPHi/"     # Location of .st files
+export PetitDIR="/leonardo/home/userexternal/tfernand/Constant_pH/Programs/petit1.6.1"                      # Petit program
+export ffDIR="/leonardo/home/userexternal/tfernand/Constant_pH/CpHMD_MetaD_fixcenter/top/"                 # Forcefield folder
+
+###################################
+#
+# -- Block Specific Parameters -- #
+#
+###################################
+export InitCycle=1       # Define beginning of the Cycle
+export EndCycle=50       # Define end of the Cycle
+
+export mdruncpu="$GroDIR mdrun -nt $nCPU -pin auto -rcon 0.0" # Define which command should be used for parallel run
+export mdrungpu="$GroDIR mdrun -ntmpi 1 -ntomp $nCPU -gpu_id $GPUid -pin auto -rcon 0.0"
+# Or change in slurm.sh
+#export mdrun="srun $GroDIR mdrun -pin on -bonded gpu -pme gpu -nb gpu -ntomp $SLURM_CPUS_PER_TASK -dlb auto -npme 1 -tunepme -maxh 23.9"
+export mdrun="srun $GroDIR mdrun -pin on -bonded gpu -pme gpu -nb gpu -ntomp $SLURM_CPUS_PER_TASK -dlb yes -maxh 23.9" # SERIAL TASK JOB
+
+###################################
+#
+# -- End of Parameters File --
+#
+########################################
+#
+###  Start of mdp file for CpHMD     ###
+#
+########################################
+#mdp# 
+#mdp# define                 = 
+#mdp# integrator             =  md
+#mdp# tinit                  =  0.0 ; Overridden with the value calculated by CpHMD
+#mdp# dt                     =  0.002    ; ps !
+#mdp# nsteps                 =  10000 ; Overridden with the value from settings
+#mdp# nstcalcenergy          =  1000
+#mdp# nstcomm                =  1000
+#mdp# nstxout-compressed     =  10000
+#mdp# compressed-x-precision =  1000
+#mdp# nstenergy              =  5000
+#mdp# nstxout                =  0
+#mdp# nstvout                =  0
+#mdp# nstfout                =  0
+#mdp# nstlog                 =  0
+#mdp# ns_type		     =  grid
+#mdp# 
+#mdp# ; ;PME (to use PME uncomment this section and comment the GRF section)
+#mdp# coulombtype         = PME
+#mdp# nstlist             = 20
+#mdp# rlist               = 1.0
+#mdp# fourierspacing      = 0.12
+#mdp# rcoulomb            = 1.0
+#mdp# pme-order           = 4
+#mdp# rvdw                = 1.0
+#mdp# cutoff-scheme       = verlet
+#mdp# rvdw-switch         = 1.0             
+#mdp# vdw-modifier        = Potential-shift-Verlet    
+#mdp# pbc                 = xyz
+#mdp# vdwtype             = cut-off
+#mdp# 
+#mdp# ; Energy monitoring 
+#mdp# ; (ions - when present - should be added to the SOL group in the index file)
+#mdp# energygrps          =  System
+#mdp# 
+#mdp# ; v-rescaletemperature coupling is on available groups
+#mdp# ; This thermostat is similar to Berendsen coupling, but the stochastic 
+#mdp# ; term ensures that a proper canonical ensemble is generated.
+#mdp# Tcoupl              = v-rescale
+#mdp# tc-grps             = Protein MMG SOL
+#mdp# tau_t               = 0.1 0.1 0.1
+#mdp# ref_t               = 310 310 310 ; Overridden with the value from settings   
+#mdp# 
+#mdp# ; Isotropic pressure coupling is now on
+#mdp# Pcoupl              = crescale
+#mdp# Pcoupltype          = isotropic
+#mdp# tau_p               = 2.0
+#mdp# compressibility     = 4.5e-5
+#mdp# ref_p               = 1.0
+#mdp# refcoord_scaling    = com
+#mdp# continuation        = yes
+#mdp# gen_vel             = no                   ;Velocity generation
+#mdp# gen_temp            = 300
+#mdp# gen_seed            = 173529
+#mdp#
+#mdp# ; lincs_order value of 8 works better than 4
+#mdp# constraint_algorithm = lincs
+#mdp# lincs_order          = 12
+#mdp# constraints          = h-bonds
+#mdp# lincs-warnangle      = 90
+########################################
+#
+###  Start of fixgro file for CpHMD     ###
+#
+########################################
+# This file will only be used when 2 chains are present or if 
+# include_itp=1 flag is given! 
+#
+#fixgro# G Protein
+#fixgro# a 1 3462
+#fixgro# G Mg
+#fixgro# a 3463 3464
+#fixgro# 
+#fixgro# # Groups to be (sequentially) assembled:
+#fixgro# A Protein
+#fixgro# A Mg
+#fixgro# 
+#fixgro# # Groups to be centered along each of the three box vectors:
+#fixgro# C Protein Protein Protein W W W
+#fixgro# C Mg Mg Mg W W W
+#fixgro# 
+#fixgro# # Use PBC "P System System None" along each of the three box vectors:
+#fixgro# P Protein Protein Protein
+#fixgro# P Mg Mg Mg
+
+########################################
+#
+###  Start of plumed file for CpHMD  ###
+# Example from original implementation #
+########################################
+# Check if the timesteps and temperature values are consistent with previous settings
+#plumed# # Activate MOLINFO functionalities
+#plumed# MOLINFO STRUCTURE=/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Prot/chain-A/06_eRMSD/rep1/run_cph.pdb
+#plumed# RESTART # Do not remove this line. This is ignored for the first cycle in each block
+#plumed# WHOLEMOLECULES ENTITY0=1-3462
+#plumed# rB: eRMSD REFERENCE=/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/W-Prot/ermsd_ref.pdb ATOMS=3032,3026,3035,3066,3060,3069,533,529,525,565,559,555
+#plumed# restr: RESTRAINT ARG=rB AT=0 KAPPA=5000
+#plumed# PRINT ARG=* STRIDE=&colvar_stride FILE=&colvar_name 

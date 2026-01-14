@@ -1,0 +1,39 @@
+; LINES STARTING WITH ';' ARE COMMENTS
+title           = Minimization A3mer   ; Title of run
+
+; The following lines tell the program the standard locations where to find certain files
+cpp             = /lib/cpp      ; Preprocessor
+;include        = -I../top      ; Directories to include in the topology format
+
+; Define can be used to control processes (POSITION RESTRAINTS)
+define          = -DPOSRES -DPOSRES_WATER
+
+; Parameters describing what to do, when to stop and what to save
+integrator      = steep         ; Algorithm (steep = steepest descent minimization)
+;emtol           = 1.0           ; Stop minimization when the maximum force < 1.0 kJ mol-1 nm-1
+nsteps          = 50000         ; Maximum number of (minimization) steps to perform
+nstenergy       = 50            ; Write energies to disk every nstenergy steps
+nstxtcout       = 50            ; Write coordinates to disk every nstxtcout steps
+nstvout         = 50
+nstlog          = 50
+xtc_grps        = System        ; Which coordinate group(s) to write to disk
+energygrps      = System        ; Which energy group(s) to write to disk
+
+; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+
+cutoff-scheme=Verlet
+nstlist         = 5             ; Frequency to update the neighbor list and long range forces
+ns_type         = grid          ; Method to determine neighbor list (simple, grid)
+constraints     = h-bonds          ; Bond types to replace by constraints
+
+;treatment of electrostatic interactions
+coulombtype = PME 
+
+;treatment of van der waals interactions
+rvdw = 1.0 
+rlist = 1.0 
+rcoulomb = 1.0 
+
+;fourierspacing = 0.12 
+; Periodic boudary conditions in all the directions 
+pbc                      = xyz

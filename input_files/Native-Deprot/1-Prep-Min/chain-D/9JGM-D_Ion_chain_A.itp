@@ -1,0 +1,37 @@
+;
+;	File '9JGM-D_Ion_chain_A.itp' was generated
+;	By user: tfernand (28029)
+;	On host: login02.leonardo.local
+;	At date: Mon Sep  1 15:00:21 2025
+;
+;	This is a include topology file
+;
+;	Created by:
+;	              :-) GROMACS - gmx pdb2gmx, 2022.3-plumed_2.8.1 (-:
+;	
+;	Executable:   /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/gromacs-2022.3-owzxiwojzrytaodpf2r7dvd63jflbvex/bin/gmx_mpi
+;	Data prefix:  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/gromacs-2022.3-owzxiwojzrytaodpf2r7dvd63jflbvex
+;	Working dir:  /leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Deprot/chain-D/01_box-min
+;	Command line:
+;	  gmx_mpi pdb2gmx -f 9JGM.pdb -o 9JGM-D.gro -p 9JGM-D.top -water select -ignh
+;	Force field was read from current directory or a relative path - path added.
+;
+
+[ moleculetype ]
+; Name            nrexcl
+Ion_chain_A         3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
+; residue 317 mMg  rtp mMg   q +2.0
+     1         mMg    317     mMg     mMg      1          2     24.305   ; qtot 2
+; residue 318 mMg  rtp mMg   q +2.0
+     2         mMg    318     mMg     mMg      2          2     24.305   ; qtot 4
+; residue 319 mMg  rtp mMg   q +2.0
+     3         mMg    319     mMg     mMg      3          2     24.305   ; qtot 6
+
+; Include Position restraint file
+#ifdef POSRES
+#include "posre_Ion_chain_A.itp"
+#endif
+

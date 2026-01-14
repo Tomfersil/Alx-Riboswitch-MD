@@ -1,0 +1,45 @@
+; Define can be used to control processes
+define                   = -DPOSRES
+; RUN CONTROL PARAMETERS
+integrator               = md
+dt                       = 0.002                ; time step (in ps)
+nsteps                   = 50000                ; number of steps: 100 ps
+nstxout                  = 200                  ; Save coordinates every nstxout steps
+nstvout                  = 200                  ; Save velocities every nstvout steps
+nstlog                   = 200                  ; Update log file at every step
+nstenergy                = 200                  ; Write energies at every step
+nstxtcout                = 200
+xtc_grps                 = System     ;group(s) to write to xtc trajectory
+energygrps               = System       ; Write energy information separately for these groups
+
+; NEIGHBORSEARCHING PARAMETERS
+nstlist                  = 10                   ; Frequency to update the neighbor list. VALORE SUGGERITO DA MATTEO
+ns-type                  = Grid
+pbc                      = xyz
+rlist                    = 1.0                  ; Cut-off distance for the short-range neighbor list. Solitam come rcoulomb e vdw type
+
+; OPTIONS FOR ELECTROSTATICS AND VDW
+cutoff-scheme            = Verlet
+coulombtype              = PME
+rcoulomb                 = 1.0                  ; 1.2 in paper jctc, Trang Nhu Do, 2014
+vdw-type                 = Cut-off
+rvdw                     = 1.0                  ; 1.2 in paper jctc, Trang Nhu Do, 2014
+
+; Temperature coupling
+tcoupl                   = V-rescale
+tc-grps                  = RNA SOL
+tau_t                    = 0.1      0.1
+ref_t                    = 310      310
+
+; Dispersion correction
+DispCorr                 = EnerPres              ; account for vdw cut-off
+; Pressure coupling
+pcoupl                   = no     ; no pressure coupling in NVT
+
+continuation             = no
+gen_vel                  = yes    ; Assign velocities to particles by taking them randomly from a Maxwell distribution
+gen_temp                 = 310.0  ; Temperature to generate corresponding Maxwell distribution
+gen_seed                 = -1     ; Seed for (semi) random number generation. Different numbers give different sets of velocities
+
+; OPTIONS FOR BONDS
+constraints              = h-bonds

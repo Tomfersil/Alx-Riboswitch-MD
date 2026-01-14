@@ -1,0 +1,6 @@
+MOLINFO STRUCTURE=/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Deprot/chain-C/01_box-min/ref.pdb
+rA: eRMSD REFERENCE=/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Deprot/chain-C/01_box-min/ref.pdb ATOMS=3032,3026,3035,3066,3060,3069,533,529,525,565,559,555
+rB: eRMSD REFERENCE=ermsd_ref.pdb ATOMS=3032,3026,3035,3066,3060,3069,533,529,525,565,559,555
+S_var: MATHEVAL ARG=rA,rB FUNC=(x^2-y^2)/(2*1.109468) PERIODIC=NO
+Z_var: MATHEVAL ARG=rA,rB,S_var FUNC=((x^2+y^2)/(2)-(z^2)-((1.109468^2)/4))^0.5 PERIODIC=NO
+PRINT ARG=* FILE=metad_test_C_rep2 STRIDE=1
