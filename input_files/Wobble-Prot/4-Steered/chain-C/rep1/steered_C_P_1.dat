@@ -1,6 +1,6 @@
 d1: DISTANCE ATOMS=3030,566
 d2: DISTANCE ATOMS=3027,563
-ermsd: eRMSD REFERENCE=/leonardo_scratch/large/userexternal/tfernand/Projects/Alx-ribo/A-Prot/ermsd_ref.pdb ATOMS=3032,3026,3035,3066,3060,3069,533,529,525,565,559,555
+ermsd: eRMSD REFERENCE=../../ermsd_ref.pdb ATOMS=3032,3026,3035,3066,3060,3069,533,529,525,565,559,555
 mr: ...
     MOVINGRESTRAINT 
     ARG=ermsd 
